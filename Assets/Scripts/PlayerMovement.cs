@@ -7,52 +7,40 @@ public class PlayerMovement : MonoBehaviour
 
     public float moveSpeed;
     public Rigidbody rb;
-    public Transform orientation;
-    
-    float horizontalInput;
-    float verticalInput;
-
-    Vector3 moveDirection;
+    public Camera cam;
 
     // Start is called before the first frame update
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.freezeRotation = true;
+        // rb.freezeRotation = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        // horizontalInput = Input.GetAxisRaw("Horizontal");
-        // verticalInput = Input.GetAxisRaw("Vertical");
+        // Getting player input
+        Vector3 forward = cam.transform.forward;
+        Vector3 right = cam.transform.right;
+        forward.y = 0;
+        forward = forward.normalized;
+        right.y = 0;
+        right = right.normalized;
 
-        // if (Input.GetKeyDown(KeyCode.W))
-        // {
-        //     MovePlayer();
-        // }
+        // Getting camera-normalized directional vectors
+        float verticalInput = Input.GetAxis("Vertical");
+        float horizontalInput = Input.GetAxis("Horizontal");
 
-        // if (Input.GetKeyDown(KeyCode.A))
-        // {
-        //     Debug.Log("A");
-        // }
-        // if (Input.GetKeyDown(KeyCode.S))
-        // {
-        //     Debug.Log("S");
-        // }
+        // Creating direction-relative input vectors
+        Vector3 forwardRelativeVerticalInput = verticalInput * forward;
+        Vector3 rightRelativeVerticalInput = horizontalInput * right;
 
-        // if (Input.GetKeyDown(KeyCode.D))
-        // {
-        //     Debug.Log("D");
-        // }
-        Vector3 direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0 , Input.GetAxisRaw("Vertical"));
-        GetComponent<Rigidbody>().MovePosition(transform.position + direction * moveSpeed * Time.fixedDeltaTime);
+        Vector3 cameraRelativeMovement = forwardRelativeVerticalInput + rightRelativeVerticalInput;
+        rb.MovePosition(transform.position + cameraRelativeMovement * moveSpeed * Time.fixedDeltaTime);
     }
 
-    void MovePlayer()
+    private void OnTriggerEnter(Collider other)
     {
-        // Debug.Log("ok");
-        // Vector3 direction = new Vector3(Input.GetAxisRaw("Horizontal"), 0 , Input.GetAxisRaw("Vertical"));
-        // GetComponent<Rigidbody>().MovePosition(transform.position + direction * movementSpeed * Time.fixedDeltaTime);
+        Debug.Log("collide");
     }
 }
