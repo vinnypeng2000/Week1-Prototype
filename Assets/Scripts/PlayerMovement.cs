@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public float moveSpeed;
     public Rigidbody rb;
     public Camera cam;
+    public TextMeshProUGUI text;
 
     // Start is called before the first frame update
     void Start()
@@ -39,8 +41,25 @@ public class PlayerMovement : MonoBehaviour
         rb.MovePosition(transform.position + cameraRelativeMovement * moveSpeed * Time.fixedDeltaTime);
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("collide");
+        //Check for a match with the specified name on any GameObject that collides with your GameObject
+        if (collision.gameObject.name == "Scroll")
+        {
+            //If the GameObject's name matches the one you suggest, output this message in the console
+            Debug.Log("Do something here");
+            text.gameObject.SetActive(true);
+        }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        //Check for a match with the specified name on any GameObject that collides with your GameObject
+        if (collision.gameObject.name == "Scroll")
+        {
+            //If the GameObject's name matches the one you suggest, output this message in the console
+            Debug.Log("Do something here");
+            text.gameObject.SetActive(false);
+        }
     }
 }
